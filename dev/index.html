@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset=UTF-8>
+  <title>your confession...</title>
+  <!--[if lt IE 9]><script src=./js/html5.js></script><![endif]-->
+  <link href=style.css rel=stylesheet />
+  <!--[if lt IE 9]><link href=ie.css rel=stylesheet /><![endif]-->
+  <script type="text/javascript" src="./js/jquery.min.js"></script>
+  <script type="text/javascript"> /* this is setting up the menu */
+  $(function() {
+    $(document).ready(function() {
+      $.getJSON("./js/site.js",function(data) { 
+        $("<h2/>").html(data.ip+" - "+data.name).appendTo("hgroup");
+        var list = $("<ul/>");
+        $.each(data.menu, function(i,data) {
+          if ("sub_menu" in data){
+            var item = $("<li/>").attr("id","dropdown").appendTo(list);
+            $("<a/>").attr("href","#"+data.header).html(data.header).appendTo(item);
+            var sub_list = $("<ul/>").attr("id","subMenu").appendTo(item);
+            $.each(data.sub_menu, function(i,data) {
+              var item = $("<li/>").appendTo(sub_list);
+              $("<a/>").attr("href","#"+data.name).html(data.name).appendTo(item);
+            });
+          } else {
+          var item = $("<li/>").appendTo(list);
+          $("<a/>").attr("href","#"+data.header).html(data.header).appendTo(item);
+          }
+        });
+        list.appendTo("nav#global");
+      });
+    });
+  });
+  </script>
+</head>
+<body>
+<div id="wrap">
+  <header>
+    <hgroup>
+      <h1>confession</h1>
+    </hgroup>
+    <nav id=global>
+    </nav>
+  </header>
+  <div id="main">
+    <article>
+      <header id="article">
+        <h1>Main</h1>
+      </header>
+      <div>
+        <p>This text will be replaced by results.</p>
+      </div>
+    </article>
+  </div>
+</div>
+<footer>
+  <p>Copyright &copy; 2012 <strong>The Ninja Collective</strong>. All Rights Reserved.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html>
+  <head>
+    <title>json test</title>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $(document).ready(function() {
+//* comment switch
+          $.getJSON("js/array_has_no_name.js",function(data) {
+            $.each(data[0], function(key,value) {
+              var div_data = "<p style='color:"+value+"'>"+key+"</p>";
+              $(div_data).appendTo("#content");
+            });
+/*/
+          $.getJSON("js/array_has_name.js",function(data) {
+            $.each(data.colorsArray, function(i,data) {
+              var div_data = "<p style='color:"+data.hex+"'>"+data.name+"</p>";
+              $(div_data).appendTo("#content");
+            });
+//*/
+          });
+          return false;
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <div id="content"></div>
+  </body>
+ </html>

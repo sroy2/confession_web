@@ -1,0 +1,7 @@
+@charset "utf-8";
+
+html { -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#71a4a1', EndColorStr='#81aeab')" }
+
+nav#global { -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType='0', StartColorStr='#ca0000', EndColorStr='#970000')" }
+nav#global ul li a:hover { -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#970000', EndColorStr='#ca0000')" }
+nav#global ul li #subMenu { -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#ca0000', EndColorStr='#970000')" }

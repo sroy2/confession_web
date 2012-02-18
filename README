@@ -1,0 +1,15 @@
+Confession Web v0.1
+
+Front end for the metasploit tool: confession.
+
+Known Problems:
+ - IE css needs to be fixed.
+ - Chrome & Opera do not allow ajax to load local files.
+ - Need to determine if files will be loaded prior to accessing results.
+ - Is it feasable to call metasploit scripts from the web front end?
+
+Contact information:
+ - sroy2@hotmail.com
+ - confession@violentpython.org
+ - confession@th3dojo.net/git
+
