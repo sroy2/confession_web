@@ -11,4 +11,29 @@
     <li><a href="https://github.com/sroy2/confession_web">git repo</a>
   </ul>
 </ul>
+<p>Current thoughts:  <a href="http://html5-demos.appspot.com/static/html5storage/index.html">best summary I've found of current capabilites</a></p>
+<ul>
+  <li>Ways to open databases in a web browser:<ul>
+    <li><a href="http://www.w3.org/TR/IndexedDB/">Indexeddb - html5</a>
+    <li><a href="http://www.w3.org/TR/webdatabase/">(depreciated) WebSQL - html5</a>
+    <li><a href="http://code.google.com/apis/gears/api_database.html">(depreciated) GearsAPI - google/js</a>
+    <li><a href="http://www.adobe.com/products/air.html">(currently rejected) Adobe AIR</a>
+    <li>silverlight (not if I'm doing it)
+    <li><a href="http://dev.w3.org/2006/webapi/FileAPI/">File API?</a></p>
+  </ul><li>Non database solutions:<ul>
+    <li><a href="http://www.json.org/js.html">json & jquery</a>
+    <li><a href="#">xml & xslt (or xul)</a>
+    <li>make the back end team send up webpages :)
+  </ul>
+</ul>
+<p>With the DB solutions we can't just pass a database back and get it opened in the browser, as far as I can tell (need to explore FileAPI to be sure), we need to build the DB locally. This can be done using the NonDB solutions. But, if we are going to use a NonDB method to transport the data back is it worth importing it into a DB just for the convenience of being able to run sql queries? We could also directly load the information from the flat files sent back. The DB is nice because it allows us to store information it a slightly more logical way (the DBs can be persistant between browser sessions) and avoids a lot of naming scheme issues that would undoubtably come by having a lot of flat files laying around, but the DB can be limited by size. Most browsers limit Local Storage to 5MB (although some like FF will prompt to allow the user to use more space).</p>
+<p> Currently I am going to proceed under the assumption that we will at a minimum be using json to get he data back to the front end. From there we can modify the design to either use load into a local DB (if we want to store the information for comparisons or just use sql queries) or just load directly and either come up with a naming convention or not worry about saving results.</p>
+<p>TODO:</p>
+<ul>
+  <li> look into File API (may be able to send back an entire DB?)
+  <li> develop database layout or naming convention
+  <li> persistent storage of results (for future comparisons) or dump them?
+  <li> is the entire tool ran and then reports generated or individual tests done with individual results sent back? (doesn't really matter if we are using a DB)
+  <li> jquery for navigation (hashchange?)
+</ul>
 </body></html>

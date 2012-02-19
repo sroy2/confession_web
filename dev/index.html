@@ -7,27 +7,18 @@
   <link href=style.css rel=stylesheet />
   <!--[if lt IE 9]><link href=ie.css rel=stylesheet /><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
-  <script type="text/javascript"> /* this is setting up the menu */
+  <script type="text/javascript">
+  function menu(obj, ul) {
+    $.each(obj, function(k, v) {
+        if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
+        else $("<a>",{href:"#"+v.item}).append(v.item).appendTo($("<li>").appendTo(ul));});
+    return ul;
+  } 
   $(function() {
     $(document).ready(function() {
       $.getJSON("./js/site.js",function(data) { 
         $("<h2/>").html(data.ip+" - "+data.name).appendTo("hgroup");
-        var list = $("<ul/>");
-        $.each(data.menu, function(i,data) {
-          if ("sub_menu" in data){
-            var item = $("<li/>").attr("id","dropdown").appendTo(list);
-            $("<a/>").attr("href","#"+data.header).html(data.header).appendTo(item);
-            var sub_list = $("<ul/>").attr("id","subMenu").appendTo(item);
-            $.each(data.sub_menu, function(i,data) {
-              var item = $("<li/>").appendTo(sub_list);
-              $("<a/>").attr("href","#"+data.name).html(data.name).appendTo(item);
-            });
-          } else {
-          var item = $("<li/>").appendTo(list);
-          $("<a/>").attr("href","#"+data.header).html(data.header).appendTo(item);
-          }
-        });
-        list.appendTo("nav#global");
+        menu(data.menu, $("<ul>")).appendTo("nav#global");
       });
     });
   });
