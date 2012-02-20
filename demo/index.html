@@ -9,6 +9,8 @@
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
   <script type="text/javascript">
+  var json = "./js/site.js";
+  var glob = "";
   function menu(obj, ul) {
     $.each(obj, function(k, v) {
         if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
@@ -16,27 +18,37 @@
     return ul;
   } 
   function make_article(tag) {
-    return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append("Some temporary text...")));
+    /*
+      Here is where most of the work will be done pulling data.
+      We can set this up to:
+        a) pull from a database
+        b) pull from a json file (site.js)
+        c) pull from different json files ([tag].js) 
+        d) do something else completely unrelated...
+      Right now its just returning some text and not pulling anything.
+    */
+      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(glob[tag]))));
   }
   $(function() {
     $(document).ready(function() {
-      $.getJSON("./js/site.js",function(data) { 
-        $("<h2/>").html(data.ip+" - "+data.name).appendTo("hgroup");
+      $.getJSON(json,function(data) { 
+        glob = data;
+        $("<h2>").html(data.ip+" - "+data.name).appendTo("hgroup");
         menu(data.menu, $("<ul>")).appendTo("nav#global");
       });
     });
   });
   $(function(){
-    var cache =  {'': $('.bbq-default')};
+    var cache =  {'': $('.default')};
     $(window).bind('hashchange', function(e) {
       var url = $.param.fragment();
-      $('.bbq-content').children(':visible').hide(); // hide ajax loader
+      $('#main').children(':visible').hide(); // hide ajax loader
       if (cache[url]) {
         cache[url].show();
       } else {
-        $('.bbq-loading').show();
+        $('.loading').show();
         cache[url] = make_article(url).appendTo('#main').load(url, function() {
-          $('.bbq-loading').hide();});
+          $('.loading').hide();});
       }
     })
     $(window).trigger('hashchange');
@@ -47,23 +59,18 @@
 <div id="wrap">
   <header>
     <hgroup>
-      <h1><a href="#">confession</h1>
+      <h1><a href="#">confession</a></h1>
     </hgroup>
     <nav id=global>
     </nav>
   </header>
-  <div id="main" class="bbq-content">
-    <article class="bbq-loading" style="display:none;">
+  <div id="main">
+    <article class="loading" style="display:none;">
       <header><h1>Loading...</h1></header>
     </article>
-    <article class="bbq-default bbq-item" style="display:block;">
-    <!-- style="display:block;" or style="display:none;" -->
-      <header>
-        <h1>Welcome</h1>
-      </header>
-      <div>
-        <p>This is the main welcome text.</p>
-      </div>
+    <article class="default" style="display:block;">
+      <header><h1>Welcome</h1></header>
+      <div><p>This is the main welcome text.</p></div>
     </article>
   </div>
 </div>
