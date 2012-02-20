@@ -9,8 +9,8 @@
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
   <script type="text/javascript">
-  var json = "./js/site.js";
-  var glob = "";
+  var file = "./js/site.js"; // current file we are pulling from
+  var json = "";             // json data from current file
   function menu(obj, ul) {
     $.each(obj, function(k, v) {
         if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
@@ -20,20 +20,16 @@
   function make_article(tag) {
     /*
       Here is where most of the work will be done pulling data.
-      We can set this up to:
-        a) pull from a database
-        b) pull from a json file (site.js)
-        c) pull from different json files ([tag].js) 
-        d) do something else completely unrelated...
-      Right now its just returning some text and not pulling anything.
+      Right now it is relying on the menu() to have already loaded the json file so we can pull from it.
     */
-      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(glob[tag]))));
+      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(json[tag]))));
   }
   $(function() {
     $(document).ready(function() {
-      $.getJSON(json,function(data) { 
-        glob = data;
+      $.getJSON(file,function(data) { 
+        json = data;
         $("<h2>").html(data.ip+" - "+data.name).appendTo("hgroup");
+        $("<a>",{href:file}).append(file).appendTo(".default p");
         menu(data.menu, $("<ul>")).appendTo("nav#global");
       });
     });
@@ -41,15 +37,10 @@
   $(function(){
     var cache =  {'': $('.default')};
     $(window).bind('hashchange', function(e) {
-      var url = $.param.fragment();
-      $('#main').children(':visible').hide(); // hide ajax loader
-      if (cache[url]) {
-        cache[url].show();
-      } else {
-        $('.loading').show();
-        cache[url] = make_article(url).appendTo('#main').load(url, function() {
-          $('.loading').hide();});
-      }
+      var tag = $.param.fragment();           // set hashtag
+      $('#main').children(':visible').hide(); // hide open articles
+      if (cache[tag]) cache[tag].show();
+      else cache[tag] = make_article(tag).appendTo('#main');
     })
     $(window).trigger('hashchange');
   });
@@ -65,12 +56,9 @@
     </nav>
   </header>
   <div id="main">
-    <article class="loading" style="display:none;">
-      <header><h1>Loading...</h1></header>
-    </article>
     <article class="default" style="display:block;">
       <header><h1>Welcome</h1></header>
-      <div><p>This is the main welcome text.</p></div>
+      <p>You are currently looking at: </p>
     </article>
   </div>
 </div>
