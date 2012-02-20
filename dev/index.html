@@ -36,16 +36,16 @@
     });
   });
   $(function(){
-    var cache =  {'': $('.bbq-default')};
+    var cache =  {'': $('.default')};
     $(window).bind('hashchange', function(e) {
       var url = $.param.fragment();
-      $('.bbq-content').children(':visible').hide(); // hide ajax loader
+      $('#main').children(':visible').hide(); // hide ajax loader
       if (cache[url]) {
         cache[url].show();
       } else {
-        $('.bbq-loading').show();
+        $('.loading').show();
         cache[url] = make_article(url).appendTo('#main').load(url, function() {
-          $('.bbq-loading').hide();});
+          $('.loading').hide();});
       }
     })
     $(window).trigger('hashchange');
@@ -56,16 +56,16 @@
 <div id="wrap">
   <header>
     <hgroup>
-      <h1><a href="#">confession</h1>
+      <h1><a href="#">confession</a></h1>
     </hgroup>
     <nav id=global>
     </nav>
   </header>
-  <div id="main" class="bbq-content">
-    <article class="bbq-loading" style="display:none;">
+  <div id="main">
+    <article class="loading" style="display:none;">
       <header><h1>Loading...</h1></header>
     </article>
-    <article class="bbq-default bbq-item" style="display:block;">
+    <article class="default" style="display:block;">
       <header><h1>Welcome</h1></header>
       <div><p>This is the main welcome text.</p></div>
     </article>
