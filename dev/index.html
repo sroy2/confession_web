@@ -7,6 +7,7 @@
   <link href=style.css rel=stylesheet />
   <!--[if lt IE 9]><link href=ie.css rel=stylesheet /><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/bbq.min.js"></script>
   <script type="text/javascript">
   function menu(obj, ul) {
     $.each(obj, function(k, v) {
@@ -14,6 +15,9 @@
         else $("<a>",{href:"#"+v.item}).append(v.item).appendTo($("<li>").appendTo(ul));});
     return ul;
   } 
+  function make_article(tag) {
+    return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append("Some temporary text...")));
+  }
   $(function() {
     $(document).ready(function() {
       $.getJSON("./js/site.js",function(data) { 
@@ -22,24 +26,43 @@
       });
     });
   });
+  $(function(){
+    var cache =  {'': $('.bbq-default')};
+    $(window).bind('hashchange', function(e) {
+      var url = $.param.fragment();
+      $('.bbq-content').children(':visible').hide(); // hide ajax loader
+      if (cache[url]) {
+        cache[url].show();
+      } else {
+        $('.bbq-loading').show();
+        cache[url] = make_article(url).appendTo('#main').load(url, function() {
+          $('.bbq-loading').hide();});
+      }
+    })
+    $(window).trigger('hashchange');
+  });
   </script>
 </head>
 <body>
 <div id="wrap">
   <header>
     <hgroup>
-      <h1>confession</h1>
+      <h1><a href="#">confession</h1>
     </hgroup>
     <nav id=global>
     </nav>
   </header>
-  <div id="main">
-    <article>
-      <header id="article">
-        <h1>Main</h1>
+  <div id="main" class="bbq-content">
+    <article class="bbq-loading" style="display:none;">
+      <header><h1>Loading...</h1></header>
+    </article>
+    <article class="bbq-default bbq-item" style="display:block;">
+    <!-- style="display:block;" or style="display:none;" -->
+      <header>
+        <h1>Welcome</h1>
       </header>
       <div>
-        <p>This text will be replaced by results.</p>
+        <p>This is the main welcome text.</p>
       </div>
     </article>
   </div>
