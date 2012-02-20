@@ -16,12 +16,21 @@
     return ul;
   } 
   function make_article(tag) {
+    /*
+      Here is where most of the work will be done pulling data.
+      We can set this up to:
+        a) pull from a database
+        b) pull from a json file (site.js)
+        c) pull from different json files ([tag].js) 
+        d) do something else completely unrelated...
+      Right now its just returning some text and not pulling anything.
+    */
     return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append("Some temporary text...")));
   }
   $(function() {
     $(document).ready(function() {
       $.getJSON("./js/site.js",function(data) { 
-        $("<h2/>").html(data.ip+" - "+data.name).appendTo("hgroup");
+        $("<h2>").html(data.ip+" - "+data.name).appendTo("hgroup");
         menu(data.menu, $("<ul>")).appendTo("nav#global");
       });
     });
@@ -57,13 +66,8 @@
       <header><h1>Loading...</h1></header>
     </article>
     <article class="bbq-default bbq-item" style="display:block;">
-    <!-- style="display:block;" or style="display:none;" -->
-      <header>
-        <h1>Welcome</h1>
-      </header>
-      <div>
-        <p>This is the main welcome text.</p>
-      </div>
+      <header><h1>Welcome</h1></header>
+      <div><p>This is the main welcome text.</p></div>
     </article>
   </div>
 </div>
