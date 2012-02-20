@@ -9,6 +9,8 @@
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
   <script type="text/javascript">
+  var json = "./js/site.js";
+  var glob = "";
   function menu(obj, ul) {
     $.each(obj, function(k, v) {
         if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
@@ -25,11 +27,12 @@
         d) do something else completely unrelated...
       Right now its just returning some text and not pulling anything.
     */
-    return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append("Some temporary text...")));
+      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(glob[tag]))));
   }
   $(function() {
     $(document).ready(function() {
-      $.getJSON("./js/site.js",function(data) { 
+      $.getJSON(json,function(data) { 
+        glob = data;
         $("<h2>").html(data.ip+" - "+data.name).appendTo("hgroup");
         menu(data.menu, $("<ul>")).appendTo("nav#global");
       });
