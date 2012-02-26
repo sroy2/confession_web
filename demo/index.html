@@ -5,24 +5,46 @@
   <title>your confession...</title>
   <!--[if lt IE 9]><script src=./js/html5.js></script><![endif]-->
   <link href=style.css rel=stylesheet />
+  <link href=datatable.css rel=stylesheet />
   <!--[if lt IE 9]><link href=ie.css rel=stylesheet /><![endif]-->
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
+  <script text="text/javascript" src="./js/datatables.min.js"></script>
   <script type="text/javascript">
   var file = "./js/site.js"; // current file we are pulling from
   var json = "";             // json data from current file
-  function menu(obj, ul) {
+  function menu(obj, ele) {
     $.each(obj, function(k, v) {
-        if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
-        else $("<a>",{href:"#"+v.item}).append(v.item).appendTo($("<li>").appendTo(ul));});
-    return ul;
-  } 
+        if (typeof(v) === 'string') { $("<a>", {href: "#" + v }).append(v).appendTo($("<li>").appendTo(ele));
+        } else if (v instanceof Array && typeof k === "string") { for (var i = 0, l = v.length; i < l; i++) { $("<li>", { id: "dropdown" }).append($("<a>",{href:"#"+k}).append(k), menu(v, $("<ul>", { id: "subMenu" }))).appendTo(ele); }
+        } else { for (key in v) { $("<li>", { id: "dropdown" }).append($("<a>",{href:"#"+key}).append(key), menu(v[key], $("<ul>", { id: "subMenu" }))).appendTo(ele); }}
+    });
+    return ele;
+  }
+  function table(obj, ele) {
+    var thead = $("<thead>");
+    var tfoot = $("<tfoot>");
+    var tbody = $("<tbody>");
+    $.each(obj.headings, function(k, v) {
+        $("<th>").append(v).appendTo(thead);
+        $("<th>").append(v).appendTo(tfoot);
+    });
+    $.each(obj.rows, function(k, v) {
+        var row = $("<tr>");
+        $.each(v, function(i, x) {
+            $("<td>").append(x).appendTo(row);
+        });
+        row.appendTo(tbody);
+    });
+    return ele.append(thead,tbody,tfoot);
+  }
   function make_article(tag) {
-    /*
-      Here is where most of the work will be done pulling data.
-      Right now it is relying on the menu() to have already loaded the json file so we can pull from it.
-    */
+    /* Do stuff */
+    if (json[tag].headings && json[tag].rows) {
+      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>",{id:tag}).append(table(json[tag], $("<table>",{cellpadding:"0", cellspacing:"0", border:"0"}))));
+    } else {
       return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(json[tag]))));
+    }
   }
   $(function() {
     $(document).ready(function() {
@@ -41,6 +63,9 @@
       $('#main').children(':visible').hide(); // hide open articles
       if (cache[tag]) cache[tag].show();
       else cache[tag] = make_article(tag).appendTo('#main');
+      $(tag).dataTable({
+        "sScrollY": "200px", "bPaginate": false
+      });
     })
     $(window).trigger('hashchange');
   });
@@ -58,7 +83,7 @@
   <div id="main">
     <article class="default" style="display:block;">
       <header><h1>Welcome</h1></header>
-      <p>You are currently looking at: </p>
+      <p><a href="#demo">Demo Table</a><br />You are currently looking at: </p>
     </article>
   </div>
 </div>

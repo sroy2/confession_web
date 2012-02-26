@@ -1,22 +1,23 @@
-<!DOCTYPE html>
 <html lang=en>
 <head>
   <meta charset=UTF-8>
   <title>your confession...</title>
-  <!--[if lt IE 9]><script src=./js/html5.js></script><![endif]-->
-  <link href=style.css rel=stylesheet />
-  <!--[if lt IE 9]><link href=ie.css rel=stylesheet /><![endif]-->
+  <link href=style2.css rel=stylesheet />
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
+  <script text="text/javascript" src="./js/datatables.min.js"></script>
   <script type="text/javascript">
   var file = "./js/site.js"; // current file we are pulling from
   var json = "";             // json data from current file
-  function menu(obj, ul) {
+  function menu(obj, ele) {
     $.each(obj, function(k, v) {
-        if ("menu" in v) $("<li>",{id:"dropdown"}).append($("<a>",{href:"#"+v.item}).append(v.item),menu(v.menu, $("<ul>",{id:"subMenu"}))).appendTo(ul);
-        else $("<a>",{href:"#"+v.item}).append(v.item).appendTo($("<li>").appendTo(ul));});
-    return ul;
-  } 
+        if (typeof(v) === 'string') { $("<a>", {href: "#" + v }).append(v).appendTo($("<li>").appendTo(ele));
+        } else if (v instanceof Array && typeof k === "string") { for (var i = 0, l = v.length; i < l; i++) { $("<li>").append($("<a>",{href:"#"+k}).append(k), menu(v, $("<ul>"))).appendTo(ele); }
+        } else { for (key in v) { $("<li>", { id: "dropdown" }).append($("<a>",{href:"#"+key}).append(key), menu(v[key], $("<ul>"))).appendTo(ele); }}
+    });
+    return ele;
+  }
+  //fucntion make_table(tag) {
   function make_article(tag) {
     /*
       Here is where most of the work will be done pulling data.
@@ -30,7 +31,10 @@
         json = data;
         $("<h2>").html(data.ip+" - "+data.name).appendTo("hgroup");
         $("<a>",{href:file}).append(file).appendTo(".default p");
-        menu(data.menu, $("<ul>")).appendTo("nav#global");
+        menu(data.menu, $("<ul>",{id:"nav"})).appendTo("nav");
+      });
+      $('#example').dataTable({
+        "sScrollY": "200px", "bPaginate": false
       });
     });
   });
@@ -46,24 +50,26 @@
   });
   </script>
 </head>
-<body>
-<div id="wrap">
-  <header>
-    <hgroup>
-      <h1><a href="#">confession</a></h1>
-    </hgroup>
-    <nav id=global>
-    </nav>
-  </header>
-  <div id="main">
-    <article class="default" style="display:block;">
-      <header><h1>Welcome</h1></header>
-      <p>You are currently looking at: </p>
-    </article>
-  </div>
-</div>
-<footer>
-  <p>Copyright &copy; 2012 <strong>The Ninja Collective</strong>. All Rights Reserved.</p>
-</footer>
-</body>
+  <body>
+    <div id="wrap">
+      <header>
+        <hgroup>
+          <h1><a href="#">confession</a></h1>
+          <h2></h2>
+        </hgroup>
+        <nav></nav>
+      </header>
+      <div id="main">
+        <article class="default">
+          <header>
+            <h1>Welcome</h1>
+          </header>
+          <p><a href="#TEST">Test Table</a><br />JSON source: </p>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <p>Copyright &copy; 2012 <strong>The Ninja Collective</strong>. All Rights Reserved.</p>
+    </footer>
+  </body>
 </html>
