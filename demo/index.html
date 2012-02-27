@@ -60,11 +60,14 @@
     $(window).bind('hashchange', function(e) {
       var tag = $.param.fragment();           // set hashtag
       $('#main').children(':visible').hide(); // hide open articles
-      if (cache[tag]) cache[tag].show();
-      else cache[tag] = make_article(tag).appendTo('#main');
-      $('#'.concat(tag)).dataTable({
-        "sScrollY": "200px", "bPaginate": false
-      });
+      if (cache[tag]) {
+        cache[tag].show();
+      } else { 
+        cache[tag] = make_article(tag).appendTo('#main');
+        $('#'.concat(tag)).dataTable({
+          "sScrollY": "200px", "bPaginate": false
+        });
+      }
     })
     $(window).trigger('hashchange');
   });
