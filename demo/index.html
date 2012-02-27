@@ -4,6 +4,7 @@
   <title>your confession...</title>
   <!--[if lt IE 9]><script src=./js/html5.js></script><![endif]-->
   <link href=style.css rel=stylesheet />
+  <link href=datatable.css rel=stylesheet />
   <script type="text/javascript" src="./js/jquery.min.js"></script>
   <script type="text/javascript" src="./js/bbq.min.js"></script>
   <script text="text/javascript" src="./js/datatables.min.js"></script>
@@ -19,13 +20,7 @@
     return ele;
   }
   function table(obj, ele) {
-    var thead = $("<thead>");
-    var tfoot = $("<tfoot>");
     var tbody = $("<tbody>");
-    $.each(obj.headings, function(k, v) {
-        $("<th>").append(v).appendTo(thead);
-        $("<th>").append(v).appendTo(tfoot);
-    });
     $.each(obj.rows, function(k, v) {
         var row = $("<tr>");
         $.each(v, function(i, x) {
@@ -33,12 +28,19 @@
         });
         row.appendTo(tbody);
     });
+    var row = $("<tr>");
+    $.each(obj.headings, function(k, v) {
+        $("<th>").append(v).appendTo(row);
+    });
+    var tfoot = $("<tfoot>").append(row);
+    var thead = $("<thead>").append(row);
+    console.log(ele.append(thead,tbody,tfoot));
     return ele.append(thead,tbody,tfoot);
   }
   function make_article(tag) {
     /* Do stuff */
     if (json[tag].headings && json[tag].rows) {
-      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>",{id:tag}).append(table(json[tag], $("<table>",{cellpadding:"0", cellspacing:"0", border:"0"}))));
+      return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append(table(json[tag], $("<table>",{cellpadding:"0", cellspacing:"0", border:"0", id:tag}))));
     } else {
       return $("<article>").append($("<header>").append($("<h1>").append(tag))).append($("<div>").append($("<p>").append(JSON.stringify(json[tag]))));
     }
@@ -60,7 +62,7 @@
       $('#main').children(':visible').hide(); // hide open articles
       if (cache[tag]) cache[tag].show();
       else cache[tag] = make_article(tag).appendTo('#main');
-      $(tag).dataTable({
+      $('#'.concat(tag)).dataTable({
         "sScrollY": "200px", "bPaginate": false
       });
     })
